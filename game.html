@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Memory Master - Viddropper</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+
+        * { box-sizing: border-box; }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f3f5;
+            color: var(--dark);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent scrolling within iframe */
+        }
+
+        /* Top Progress Grid */
+        #progress-bar {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr); /* 2 rows on mobile */
+            gap: 4px;
+            padding: 10px;
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .level-dot {
+            height: 8px;
+            background: #dfe6e9;
+            border-radius: 4px;
+        }
+
+        .dot-success { background: var(--success); }
+        .dot-error { background: var(--error); }
+
+        /* Main Container */
+        #game-view {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        h1 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary); }
+        p { line-height: 1.5; font-size: 0.9rem; color: #7f8c8d; }
+
+        #display-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin: 25px 0;
+            color: var(--dark);
+            word-wrap: break-word;
+            min-height: 3rem;
+        }
+
+        #timer-box {
+            font-size: 1rem;
+            color: var(--error);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .level-info {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #95a5a6;
+        }
+
+        /* Input Styling */
+        input[type="text"], input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2rem;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        button {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:active { opacity: 0.8; }
+
+        .hidden { display: none; }
+
+        /* Score & Rank */
+        #final-score { font-size: 2.5rem; color: var(--primary); margin: 10px 0; }
+        #rank-msg { font-weight: bold; margin-bottom: 20px; color: var(--success); }
+    </style>
+</head>
+<body>
+
+    <div id="progress-bar"></div>
+
+    <div id="game-view">
+        <div id="screen-start" class="card">
+            <h1>Memory Master</h1>
+            <p>Challenge your brain! You have <b>5 seconds</b> to memorize a sequence of numbers in each level.</p>
+            <p>20 Levels Total</p>
+            <button onclick="initGame()">START GAME</button>
+        </div>
+
+        <div id="screen-memo" class="card hidden">
+            <div class="level-info">Level <span id="lab-lv">1</span> / 20</div>
+            <div id="timer-box">Time left: <span id="sec">5</span>s</div>
+            <div id="display-number">---</div>
+        </div>
+
+        <div id="screen-input" class="card hidden">
+            <h3>Recall the number</h3>
+            <input type="tel" id="user-in" autocomplete="off" placeholder="Enter numbers here">
+            <button onclick="submitAnswer()">SUBMIT</button>
+        </div>
+
+        <div id="screen-result" class="card hidden">
+            <h1>Game Over</h1>
+            <div class="level-info">Your Total Score</div>
+            <div id="final-score">0</div>
+            <div id="rank-msg"></div>
+            <button onclick="location.reload()">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        let lv = 1;
+        let score = 0;
+        let secret = "";
+        let clock;
+        const maxLv = 20;
+
+        // Create Dots
+        const bar = document.getElementById('progress-bar');
+        for(let i=1; i<=maxLv; i++) {
+            let d = document.createElement('div');
+            d.className = 'level-dot';
+            d.id = 'd'+i;
+            bar.appendChild(d);
+        }
+
+        function initGame() {
+            document.getElementById('screen-start').classList.add('hidden');
+            runLevel();
+        }
+
+        function runLevel() {
+            if(lv > maxLv) return finish();
+
+            document.getElementById('lab-lv').innerText = lv;
+            document.getElementById('screen-memo').classList.remove('hidden');
+            document.getElementById('screen-input').classList.add('hidden');
+
+            // Generate random number based on level
+            secret = "";
+            for(let i=0; i<lv; i++) {
+                secret += (i===0) ? Math.floor(Math.random()*9+1) : Math.floor(Math.random()*10);
+            }
+            document.getElementById('display-number').innerText = secret;
+
+            let left = 5;
+            document.getElementById('sec').innerText = left;
+            
+            clearInterval(clock);
+            clock = setInterval(() => {
+                left--;
+                document.getElementById('sec').innerText = left;
+                if(left <= 0) {
+                    clearInterval(clock);
+                    goInput();
+                }
+            }, 1000);
+        }
+
+        function goInput() {
+            document.getElementById('screen-memo').classList.add('hidden');
+            document.getElementById('screen-input').classList.remove('hidden');
+            const input = document.getElementById('user-in');
+            input.value = "";
+            input.focus();
+        }
+
+        function submitAnswer() {
+            const val = document.getElementById('user-in').value.trim();
+            const dot = document.getElementById('d'+lv);
+
+            if(val === secret) {
+                dot.classList.add('dot-success');
+                score += (lv * 5);
+            } else {
+                dot.classList.add('dot-error');
+            }
+
+            lv++;
+            if(lv <= maxLv) runLevel();
+            else finish();
+        }
+
+        function finish() {
+            document.getElementById('screen-input').classList.add('hidden');
+            document.getElementById('screen-memo').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+            
+            document.getElementById('final-score').innerText = score;
+            
+            let msg = "";
+            if(score >= 1000) msg = "LEGENDARY!";
+            else if(score >= 840) msg = "EXCELLENT!";
+            else if(score >= 500) msg = "GOOD JOB!";
+            else msg = "KEEP PRACTICING!";
+            
+            document.getElementById('rank-msg').innerText = msg;
+        }
+
+        // Allow Enter key
+        document.getElementById('user-in').addEventListener('keyup', (e) => {
+            if(e.key === 'Enter') submitAnswer();
+        });
+    </script>
+</body>
+</html>
