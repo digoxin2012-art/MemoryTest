@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Test - Improve Your Brain Power | VidDropper</title>
+    <meta name="description" content="Take our free online Memory Test to challenge your brain. 20 levels of numerical recall to improve your short-term memory and cognitive skills.">
+    <meta name="keywords" content="Memory Test, Brain Game, Improve Memory, Online Memory Game, Cognitive Test, VidDropper">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #2ecc71;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header & Nav */
+        header {
+            background: white;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
+
+        /* Hero & Game Section */
+        .hero {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #eef2f7 100%);
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; color: var(--secondary); }
+        .hero p { max-width: 600px; margin: 0 auto 30px; color: #64748b; }
+
+        /* iframe Styling */
+        .game-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            position: relative;
+            aspect-ratio: 3/4; /* Maintains good height for mobile/desktop */
+            border: 8px solid #333;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* SEO Sections */
+        section {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        h2 { font-size: 2rem; border-left: 5px solid var(--primary); padding-left: 15px; margin-bottom: 25px; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .card h3 { color: var(--primary); margin-top: 0; }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .game-container { aspect-ratio: 4/6; } /* Taller on mobile for keyboards */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">VidDropper</a>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>The Ultimate Online Memory Test</h1>
+            <p>Challenge your focus and train your brain with our 20-level numerical recall challenge. How far can you go?</p>
+            
+            <div class="game-container">
+                <iframe src="https://www.viddropper.com/game.html" title="Memory Test Game"></iframe>
+            </div>
+        </section>
+
+        <section id="how-to-play">
+            <h2>How to Play This Memory Test</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>1. Memorize</h3>
+                    <p>In each level, a number will appear on the screen. You have exactly <b>5 seconds</b> to commit it to memory.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Recall</h3>
+                    <p>Once the timer hits zero, the number disappears. Type the exact sequence into the input box provided.</p>
+                </div>
+                <div class="card">
+                    <h3>3. Progress</h3>
+                    <p>There are <b>20 levels</b> in total. The numbers get longer (up to 20 digits!) as you advance through the test.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="scoring">
+            <h2>Scoring & Performance</h2>
+            <p>Our Memory Test uses a weighted scoring system to reward players who reach the difficult higher levels.</p>
+            <div class="card">
+                <p>Points are awarded based on the level number multiplied by 5:</p>
+                <ul>
+                    <li>Level 1: 5 Points</li>
+                    <li>Level 10: 50 Points</li>
+                    <li>Level 20: 100 Points</li>
+                    <li><b>Maximum Total Score: 1050 Points</b></li>
+                </ul>
+                <p><strong>Rankings:</strong> 840+ is considered <b>Excellent</b>. Scores over 1000 are reserved for <b>Memory Masters</b>.</p>
+            </div>
+        </section>
+
+        <section id="benefits">
+            <h2>Why Take a Memory Test?</h2>
+            <div class="grid">
+                <div>
+                    <h3>Improve Cognitive Function</h3>
+                    <p>Regularly engaging in memory exercises can help strengthen the neural pathways associated with short-term recall and attention to detail.</p>
+                </div>
+                <div>
+                    <h3>Track Your Progress</h3>
+                    <p>Use this tool daily at VidDropper.com to see if your focus improves over time. It's a great warm-up for students or professionals.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 VidDropper.com - All Rights Reserved.</p>
+        <p style="font-size: 0.8rem; opacity: 0.7;">Train your brain. Boost your memory.</p>
+    </footer>
+
+</body>
+</html>
